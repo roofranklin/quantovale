@@ -1,11 +1,8 @@
-import FormProperty from "./pages/form-property/form-property"
+import FormProperty from "./pages/FormProperty"
 
 function QuantoVale() {
   return (
-    <FormProperty
-      propertyGroup="apartamentos"
-      propertyState="RJ" 
-    />
+    <FormProperty />
   )
 }
 
