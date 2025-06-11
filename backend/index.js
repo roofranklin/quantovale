@@ -7,30 +7,27 @@ puppeteer.use(StealthPlugin());
 
 const app = express();
 app.use(cors());
-const PORT = 3000;
+const PORT = 3001;
 
 // Monta a URL com base nos parâmetros da query string
 function buildZapUrl(params) {
-  const { tipo, estado, cidade, endereco } = params;
 
-  const path = `${tipo}/${estado}+${cidade}/${endereco}`;
+  const path = params.path;
 
   const queryParams = new URLSearchParams({
-    transacao: 'venda',
-    pagina: params.pagina || '1',
-    tipos: params.tipos || '',
-    banheiros: params.banheiros || '',
-    quartos: params.quartos || '',
-    vagas: params.vagas || '',
-    areaMinima: params.areaMinima || '',
-    areaMaxima: params.areaMaxima || '',
+    bas: params.banheiros || '',
+    ros: params.quartos || '',
+    gsp: params.vagas || '',
+    ss: params.areaMinima || '',
+    se: params.areaMaxima || '',
+    ret: params.tipos || '',
   });
 
-  return `https://www.zapimoveis.com.br/venda/${path}/?${queryParams.toString()}`;
+  return `https://www.olx.com.br/imoveis/venda/${path}?${queryParams.toString()}`;
 }
 
-app.get('/zap', async (req, res) => {
-  const requiredParams = ['tipo', 'estado', 'cidade', 'endereco', 'tipos'];
+app.get('/olx', async (req, res) => {
+  const requiredParams = ['banheiros', 'quartos', 'vagas', 'areaMinima', 'areaMaxima', 'tipos'];
   const missingParams = requiredParams.filter(p => !req.query[p]);
 
   if (missingParams.length > 0) {

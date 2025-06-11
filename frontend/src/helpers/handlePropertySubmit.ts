@@ -1,12 +1,9 @@
 import axios from "axios";
-import formatText from "../utils/utils";
 
 interface HandleSubmitParams {
   e: React.FormEvent<HTMLFormElement>;
   propertyGroup: string;
-  propertyState: string;
-  propertyStreet: string;
-  propertyCity: string;
+  propertyPath: string;
   propertyArea: number;
   propertyRooms: string;
   propertyBathrooms: string;
@@ -19,9 +16,7 @@ interface HandleSubmitParams {
 const handlePropertySubmit = async ({
   e,
   propertyGroup,
-  propertyState,
-  propertyStreet,
-  propertyCity,
+  propertyPath,
   propertyArea,
   propertyRooms,
   propertyBathrooms,
@@ -36,17 +31,13 @@ const handlePropertySubmit = async ({
   setError(null);
 
   try {
-    let propertyType = "imoveis";
+    let propertyType = "";
 
     if (propertyGroup === "apartamentos") {
-      propertyType = "apartamento_residencial";
+      propertyType = "1020";
     } else if (propertyGroup === "casas") {
-      propertyType = "casa_residencial";
+      propertyType = "1040";
     }
-
-    const formattedStreet = formatText(propertyStreet);
-    const formattedCity = formatText(propertyCity);
-    const formattedState = formatText(propertyState).toLowerCase();
     
     let minArea = Number(propertyArea * 0.5);
     let maxArea = Number(propertyArea * 1.5);
@@ -55,7 +46,7 @@ const handlePropertySubmit = async ({
       maxArea = 1000;
     }
 
-    const response = await axios.get(`http://127.0.0.1:3000/zap?tipo=${propertyGroup}&estado=${formattedState}&cidade=${formattedCity}&endereco=${formattedStreet}&tipos=${propertyType}&pagina=1&banheiros=${propertyBathrooms}&quartos=${propertyRooms}&vagas=${propertyGarages}&areaMinima=${minArea}&areaMaxima=${maxArea}`);
+    const response = await axios.get(`http://localhost:3001/olx?path=${propertyPath}&tipo=${propertyGroup}&banheiros=${propertyBathrooms}&quartos=${propertyRooms}&vagas=${propertyGarages}&areaMinima=${minArea}&areaMaxima=${maxArea}`);
     
     const data = response.data?.props?.pageProps?.initialProps?.data;
     if (Array.isArray(data) && data.length > 0) {
